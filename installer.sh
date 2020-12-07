@@ -2,6 +2,7 @@
 
 cd "`dirname $0`"
 
+INSTALL_DIR=/usr/local/bin
 function assert() {
     "$@"
 
@@ -39,24 +40,24 @@ function _install() {
     exit 1
     fi
 
-    if [ ! -f "./clash" ];then
+    if [ ! -f "./clash-premium" ];then
     echo "Clash core not found."
     echo "Please download it from https://github.com/Dreamacro/clash/releases/tag/premium, and rename to ./clash"
     fi
 
     assert install -d -m 0755 /usr/lib/clash
-    assert install -d -m 0644 /srv/clash/
+    #assert install -d -m 0644 /srv/clash/
 
-    assert install -m 0755 ./clash /usr/bin/clash
+    assert install -m 0755 ./clash-premium ${INSTALL_DIR}/clash-premium
 
-    assert install -m 0755 scripts/bypass-proxy-pid /usr/bin/bypass-proxy-pid
-    assert install -m 0755 scripts/bypass-proxy /usr/bin/bypass-proxy
+    assert install -m 0755 scripts/bypass-proxy-pid ${INSTALL_DIR}/bypass-proxy-pid
+    assert install -m 0755 scripts/bypass-proxy ${INSTALL_DIR}/bypass-proxy
 
     assert install -m 0700 scripts/clean-tun.sh /usr/lib/clash/clean-tun.sh
     assert install -m 0700 scripts/setup-tun.sh /usr/lib/clash/setup-tun.sh
     assert install -m 0700 scripts/setup-cgroup.sh /usr/lib/clash/setup-cgroup.sh
 
-    assert install -m 0644 scripts/clash.service /usr/lib/systemd/system/clash.service
+    assert install -m 0644 scripts/clash.service /usr/lib/systemd/system/clash-premium.service
     assert install -m 0644 scripts/99-clash.rules /usr/lib/udev/rules.d/99-clash.rules
 
     echo "Install successfully"
@@ -77,11 +78,11 @@ function _uninstall() {
     systemctl disable clash
 
     rm -rf /usr/lib/clash
-    rm -rf /usr/lib/systemd/system/clash.service
+    rm -rf /usr/lib/systemd/system/clash-premium.service
     rm -rf /usr/lib/udev/rules.d/99-clash.rules
-    rm -rf /usr/bin/clash
-    rm -rf /usr/bin/bypass-proxy-uid
-    rm -rf /usr/bin/bypass-proxy
+    rm -rf ${INSTALL_DIR}/clash
+    rm -rf ${INSTALL_DIR}/bypass-proxy-uid
+    rm -rf ${INSTALL_DIR}/bypass-proxy
 
     echo "Uninstall successfully"
 
