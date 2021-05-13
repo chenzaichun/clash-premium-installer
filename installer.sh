@@ -21,9 +21,8 @@ function assert_command() {
 
 function _install() {
     assert_command install
-    assert_command iptables
+    assert_command nft
     assert_command ip
-    assert_command install
 
     if [ ! -d "/usr/lib/udev/rules.d" ];then
     echo "udev not found"
@@ -35,7 +34,7 @@ function _install() {
     exit 1
     fi
 
-    if [ ! -d "/sys/fs/cgroup/net_cls" ];then
+    if ! grep net_cls "/proc/cgroups" 2> /dev/null > /dev/null ;then
     echo "cgroup not support net_cls"
     exit 1
     fi
@@ -45,10 +44,12 @@ function _install() {
     echo "Please download it from https://github.com/Dreamacro/clash/releases/tag/premium, and rename to ./clash"
     fi
 
-    assert install -d -m 0755 /usr/lib/clash
-    #assert install -d -m 0644 /srv/clash/
+    
+    assert install -d -m 0755 /etc/default/
+    assert install -d -m 0755 /usr/lib/clash/
 
     assert install -m 0755 ./clash-premium ${INSTALL_DIR}/clash-premium
+    assert install -m 0644 scripts/clash-default /etc/default/clash
 
     assert install -m 0755 scripts/bypass-proxy-pid ${INSTALL_DIR}/bypass-proxy-pid
     assert install -m 0755 scripts/bypass-proxy ${INSTALL_DIR}/bypass-proxy
@@ -62,7 +63,10 @@ function _install() {
 
     echo "Install successfully"
     echo ""
-    echo "Home directory on /srv/clash"
+    echo "Home directory at /srv/clash"
+    echo ""
+    echo "All dns traffic will be redirected to 1.0.0.1:53"
+    echo "Please use clash core's 'tun.dns-hijack' to handle it"
     echo ""
     echo "Use 'systemctl start clash' to start"
     echo "Use 'systemctl enable clash' to enable auto-restart on boot"
