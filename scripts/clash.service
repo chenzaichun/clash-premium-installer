@@ -6,7 +6,7 @@ After=network-online.target
 Type=simple
 ExecStartPre=+/usr/lib/clash/setup-cgroup.sh
 ExecStart=/usr/local/bin/bypass-proxy /usr/local/bin/clash-premium -d /home/chenzaichun/kafkatest/clash -f /home/chenzaichun/kafkatest/clash/config-tun.yaml
-ExecStopPost=+/usr/lib/clash/clean-tun.sh
+#ExecStopPost=+/usr/lib/clash/clean-tun.sh
 
 [Install]
 WantedBy=multi-user.target

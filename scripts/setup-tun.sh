@@ -26,6 +26,7 @@ iptables -t mangle -A CLASH -d 224.0.0.0/4 -j RETURN
 iptables -t mangle -A CLASH -d 172.16.0.0/16 -j RETURN
 iptables -t mangle -A CLASH -d 172.17.0.0/16 -j RETURN
 iptables -t mangle -A CLASH -d 172.31.0.0/16 -j RETURN
+iptables -t mangle -A CLASH -d 198.18.0.0/16 -j RETURN
 iptables -t mangle -A CLASH -j MARK --set-mark "$PROXY_FWMARK"
 
 iptables -t mangle -N CLASH_FORWARD
@@ -38,6 +39,7 @@ iptables -t mangle -A CLASH_FORWARD -d 224.0.0.0/4 -j RETURN
 iptables -t mangle -A CLASH_FORWARD -d 172.16.0.0/16 -j RETURN
 iptables -t mangle -A CLASH_FORWARD -d 172.17.0.0/16 -j RETURN
 iptables -t mangle -A CLASH_FORWARD -d 172.31.0.0/16 -j RETURN
+iptables -t mangle -A CLASH_FORWARD -d 198.18.0.0/16 -j RETURN
 iptables -t mangle -A CLASH_FORWARD -j MARK --set-mark "$PROXY_FWMARK"
 
 iptables -t nat -N CLASH_DNS
