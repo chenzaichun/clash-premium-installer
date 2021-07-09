@@ -8,7 +8,7 @@ ip rule del fwmark "$NETFILTER_MARK" lookup "$IPROUTE2_TABLE_ID" > /dev/null 2> 
 ip rule add fwmark "$NETFILTER_MARK" lookup "$IPROUTE2_TABLE_ID"
 
 nft -f - << EOF
-define LOCAL_SUBNET = {127.0.0.0/8, 224.0.0.0/4, 192.168.0.0/16, 10.0.0.0/8, 172.16.0.0/12}
+define LOCAL_SUBNET = {127.0.0.0/8, 224.0.0.0/4, 192.168.0.0/16, 10.0.0.0/8, 172.16.0.0/16, 172.17.0.0/16, 172.31.0.0/16, 192.18.0.0/16}
 
 table clash
 flush table clash
@@ -50,7 +50,7 @@ table clash {
     }
     
     chain forward-dns-redirect {
-        type nat hook prerouting priority 0; policy accept;
+        # type nat hook prerouting priority 0; policy accept;
         
         ip protocol != { tcp, udp } accept
         
@@ -60,8 +60,8 @@ table clash {
 }
 EOF
 
-iptables -t nat -I OUTPUT -p udp --dport 53 -j CLASH_DNS
-iptables -t nat -I PREROUTING -p udp --dport 53 -j REDIRECT --to 1053
+# iptables -t nat -I OUTPUT -p udp --dport 53 -j CLASH_DNS
+# iptables -t nat -I PREROUTING -p udp --dport 53 -j REDIRECT --to 1053
 
 sysctl -w net/ipv4/ip_forward=1
 
